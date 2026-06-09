@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HACKER CLASS</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <span class="logo">[ HACKERS 68]</span>
+        </div>
+
+        <!-- Login Section -->
+        <div class="login-section" id="loginSection">
+            <div class="login-box">
+                <input type="text" class="input-field" id="usernameInput" placeholder="USERNAME">
+                <input type="text" class="input-field" id="roomInput" placeholder="ROOM CODE">
+                <button class="btn-connect" onclick="connect()">CONNECT →</button>
+            </div>
+        </div>
+
+        <!-- Chat Section -->
+        <div class="chat-section" id="chatSection" style="display: none;">
+            <div class="chat-header">
+                <div class="room-info">
+                    <span class="room-label">[HACKER 87]</span>
+                    <span class="room-name" id="roomName">ROOM</span>
+                    <span class="room-status" id="roomStatus">ROOM</span>
+                </div>
+                <div class="chat-controls">
+                    <span class="online-count" id="onlineCount">ONLINE</span>
+                    <span class="member-count" id="memberCount">MEMBERS</span>
+                    <button class="btn-leave" onclick="leaveRoom()">← Leave Room</button>
+                </div>
+            </div>
+
+            <div class="chat-container">
+                <div class="sidebar">
+                    <div class="sidebar-header">ROOM //</div>
+                    <div class="sidebar-status">
+                        <span class="status-indicator">U</span>
+                        <span class="status-text">WELCOME TO THE HACKER CLASS CHAT SYSTEM.</span>
+                    </div>
+                    <div class="secret-room">IN SECRET ROOM</div>
+                    <div class="member-list" id="memberList">
+                        <!-- Members will be listed here -->
+                    </div>
+                </div>
+
+                <div class="main-chat">
+                    <div class="messages" id="messages">
+                        <!-- Messages will appear here -->
+                    </div>
+                    <div class="input-area">
+                        <button class="btn-upload">📷</button>
+                        <input type="text" class="chat-input" id="messageInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendMessage()">
+                        <button class="btn-send" onclick="sendMessage()">➤</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <span>© 2026 HACKER CLASS. ALL RIGHTS RESERVED.</span>
+            <span class="status-online">STATUS: ONLINE</span>
+            <span class="made-by">MADE BY Mr Elisa</span>
+        </div>
+    </div>
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #0a0a0a;
+    color: #00ff41;
+    font-family: 'Courier New', monospace;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    min-height: 100vh;
+    border: 1px solid #00ff41;
+    display: flex;
+    flex-direction: column;
+    background: #0d0d0d;
+    position: relative;
+}
+
+/* Header */
+.header {
+    border-bottom: 1px solid #00ff41;
+    padding: 15px 20px;
+    text-align: center;
+    background: #0a0a0a;
+}
+
+.logo {
+    font-size: 1.4rem;
+    font-weight: bold;
+    letter-spacing: 4px;
+    text-shadow: 0 0 10px #00ff41;
+}
+
+/* Login Section */
+.login-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+.login-box {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 400px;
+    border: 1px solid #00ff41;
+    padding: 40px 30px;
+    background: #0d0d0d;
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.1);
+}
+
+.input-field {
+    background: #0a0a0a;
+    border: 1px solid #00ff41;
+    color: #00ff41;
+    padding: 12px 15px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    outline: none;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.input-field::placeholder {
+    color: #0a4a1a;
+    letter-spacing: 2px;
+}
+
+.input-field:focus {
+    box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
+}
+
+.btn-connect {
+    background: transparent;
+    border: 1px solid #00ff41;
+    color: #00ff41;
+    padding: 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    transition: all 0.3s;
+}
+
+.btn-connect:hover {
+    background: #00ff41;
+    color: #0a0a0a;
+    box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
+}
+
+/* Chat Section */
+.chat-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    border-bottom: 1px solid #00ff41;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: #0a0a0a;
+}
+
+.room-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.room-label {
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.room-name, .room-status {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.room-name::before {
+    content: '// ';
+    color: #0a4a1a;
+}
+
+.chat-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.online-count, .member-count {
+    font-size: 0.8rem;
+    padding: 4px 10px;
+    border: 1px solid #00ff41;
+    cursor: pointer;
+}
+
+.online-count:hover, .member-count:hover {
+    background: rgba(0, 255, 65, 0.1);
+}
+
+.btn-leave {
+    background: transparent;
+    border: 1px solid #ff0040;
+    color: #ff0040;
+    padding: 6px 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-leave:hover {
+    background: #ff0040;
+    color: #0a0a0a;
+}
+
+/* Chat Container */
+.chat-container {
+    flex: 1;
+    display: flex;
+    min-height: 400px;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    border-right: 1px solid #00ff41;
+    display: flex;
+    flex-direction: column;
+    background: #090909;
+}
+
+.sidebar-header {
+    padding: 12px 15px;
+    border-bottom: 1px solid #00ff41;
+    font-weight: bold;
+    letter-spacing: 2px;
+    font-size: 0.85rem;
+}
+
+.sidebar-status {
+    padding: 15px;
+    border-bottom: 1px solid #00ff41;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.status-indicator {
+    color: #00ff41;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.status-text {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    line-height: 1.4;
+}
+
+.secret-room {
+    padding: 12px 15px;
+    border-bottom: 1px solid #00ff41;
+    font-size: 0.8rem;
+    color: #ff0040;
+    letter-spacing: 1px;
+}
+
+.member-list {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.member-item {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    border-bottom: 1px solid rgba(0, 255, 65, 0.1);
+    letter-spacing: 1px;
+}
+
+.member-item::before {
+    content: '> ';
+    color: #0a4a1a;
+}
+
+/* Main Chat */
+.main-chat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.messages {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.message {
+    background: rgba(0, 255, 65, 0.05);
+    border: 1px solid rgba(0, 255, 65, 0.15);
+    padding: 10px 12px;
+    max-width: 80%;
+    font-size: 0.85rem;
+}
+
+.message.system {
+    align-self: center;
+    background: transparent;
+    border: none;
+    font-size: 0.75rem;
+    opacity: 0.6;
+    text-align: center;
+    max-width: 100%;
+}
+
+.message.self {
+    align-self: flex-end;
+    background: rgba(0, 255, 65, 0.1);
+    border-color: rgba(0, 255, 65, 0.3);
+}
+
+.message.other {
+    align-self: flex-start;
+}
+
+.message-header {
+    font-size: 0.7rem;
+    opacity: 0.7;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+}
+
+.message-header .time {
+    float: right;
+    margin-left: 10px;
+    color: #0a4a1a;
+}
+
+.message-body {
+    word-break: break-word;
+}
+
+/* Input Area */
+.input-area {
+    border-top: 1px solid #00ff41;
+    padding: 12px 15px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    background: #0a0a0a;
+}
+
+.btn-upload {
+    background: transparent;
+    border: 1px solid #00ff41;
+    color: #00ff41;
+    padding: 8px 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+.btn-upload:hover {
+    background: rgba(0, 255, 65, 0.1);
+}
+
+.chat-input {
+    flex: 1;
+    background: #0a0a0a;
+    border: 1px solid #00ff41;
+    color: #00ff41;
+    padding: 10px 12px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    outline: none;
+}
+
+.chat-input::placeholder {
+    color: #0a4a1a;
+}
+
+.chat-input:focus {
+    box-shadow: 0 0 8px rgba(0, 255, 65, 0.2);
+}
+
+.btn-send {
+    background: transparent;
+    border: 1px solid #00ff41;
+    color: #00ff41;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: all 0.3s;
+}
+
+.btn-send:hover {
+    background: #00ff41;
+    color: #0a0a0a;
+}
+
+/* Footer */
+.footer {
+    border-top: 1px solid #00ff41;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.7rem;
+    flex-wrap: wrap;
+    gap: 5px;
+    background: #0a0a0a;
+}
+
+.status-online {
+    color: #00ff41;
+    animation: blink 1.5s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+}
+
+.made-by {
+    opacity: 0.6;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #00ff41;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #00cc33;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .chat-container {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+        max-height: 150px;
+        border-right: none;
+        border-bottom: 1px solid #00ff41;
+    }
+    .header .logo {
+        font-size: 1rem;
+    }
+    .chat-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .messages .message {
+        max-width: 95%;
+    }
+    .login-box {
+        padding: 25px 20px;
+    }
+}
+    </style>
+    <script>
+        // Simple client-side chat simulation
+let currentUser = '';
+let currentRoom = '';
+let isConnected = false;
+
+function connect() {
+    const username = document.getElementById('usernameInput').value.trim();
+    const room = document.getElementById('roomInput').value.trim();
+
+    if (!username || !room) {
+        alert('Please enter both username and room.');
+        return;
+    }
+
+    currentUser = username;
+    currentRoom = room;
+
+    document.getElementById('loginSection').style.display = 'none';
+    document.getElementById('chatSection').style.display = 'flex';
+    document.getElementById('roomName').textContent = room;
+
+    isConnected = true;
+
+    // Add system message
+    addMessage('system', `WELCOME TO THE HACKER CLASS CHAT SYSTEM. YOU HAVE JOINED ROOM "${room}"`);
+    addMessage('system', `${username} has joined the room.`);
+
+    // Add current user to member list
+    addMember(username);
+    updateCounts();
+}
+
+function leaveRoom() {
+    if (!isConnected) return;
+
+    addMessage('system', `${currentUser} has left the room.`);
+    isConnected = false;
+
+    document.getElementById('chatSection').style.display = 'none';
+    document.getElementById('loginSection').style.display = 'flex';
+
+    // Clear members
+    document.getElementById('memberList').innerHTML = '';
+    document.getElementById('messages').innerHTML = '';
+    currentUser = '';
+    currentRoom = '';
+}
+
+function sendMessage() {
+    if (!isConnected) return;
+
+    const input = document.getElementById('messageInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    addMessage('self', text, currentUser);
+    input.value = '';
+}
+
+function addMessage(type, text, username) {
+    const messagesDiv = document.getElementById('messages');
+    const msgDiv = document.createElement('div');
+    msgDiv.className = `message ${type}`;
+
+    if (type === 'system') {
+        msgDiv.innerHTML = `<div class="message-body">// ${text} //</div>`;
+    } else {
+        const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        msgDiv.innerHTML = `
+            <div class="message-header">
+                <span>${username || currentUser}</span>
+                <span class="time">${time}</span>
+            </div>
+            <div class="message-body">${text}</div>
+        `;
+    }
+
+    messagesDiv.appendChild(msgDiv);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+function addMember(name) {
+    const memberList = document.getElementById('memberList');
+    const memberDiv = document.createElement('div');
+    memberDiv.className = 'member-item';
+    memberDiv.textContent = name;
+    memberList.appendChild(memberDiv);
+}
+
+function updateCounts() {
+    const count = document.getElementById('memberList').children.length;
+    document.getElementById('onlineCount').textContent = `ONLINE: ${count}`;
+    document.getElementById('memberCount').textContent = `MEMBERS: ${count}`;
+}
+    </script>
+</body>
+</html>
