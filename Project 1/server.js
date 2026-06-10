@@ -716,4 +716,3 @@ io.on('connection', (socket) => {
     });
 
     // Call initiation
-    socket.on('call-user
