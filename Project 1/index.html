@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HACKER CLASS</title>
     <link rel="stylesheet" href="style.css">
+    
 </head>
 <body>
     <div class="container">
@@ -16,8 +17,8 @@
         <!-- Login Section -->
         <div class="login-section" id="loginSection">
             <div class="login-box">
-                <input type="text" class="input-field" id="usernameInput" placeholder="USERNAME">
-                <input type="text" class="input-field" id="roomInput" placeholder="ROOM CODE">
+                <input type="text" class="input-field" id="usernameInput" placeholder="USERNAME" onkeydown="if(event.key==='Enter') connect()">
+                <input type="password" class="input-field" id="roomInput" placeholder="ROOM CODE" onkeydown="if(event.key==='Enter') connect()">
                 <button class="btn-connect" onclick="connect()">CONNECT →</button>
             </div>
         </div>
@@ -26,7 +27,7 @@
         <div class="chat-section" id="chatSection" style="display: none;">
             <div class="chat-header">
                 <div class="room-info">
-                    <span class="room-label">[HACKER 87]</span>
+                    <span class="room-label">[HACKER 68]</span>
                     <span class="room-name" id="roomName">ROOM</span>
                     <span class="room-status" id="roomStatus">ROOM</span>
                 </div>
@@ -34,6 +35,9 @@
                     <span class="online-count" id="onlineCount">ONLINE</span>
                     <span class="member-count" id="memberCount">MEMBERS</span>
                     <button class="btn-leave" onclick="leaveRoom()">← Leave Room</button>
+                    <button class="btn-video" onclick="startVideoCall()">📹 Video Call</button>
+                    <button class="btn-call" onclick="startAudioCall()">📞 Audio Call</button>
+                    <button class="btn-screen" onclick="startScreenShare()">🖥️ Share Screen</button>
                 </div>
             </div>
 
@@ -54,10 +58,15 @@
                     <div class="messages" id="messages">
                         <!-- Messages will appear here -->
                     </div>
+                    <!-- CALL AREA -->
+                <div id="callContainer" style="display:none; padding:10px; border-top:1px solid #00ff41;">
+                  <video id="localVideo" autoplay muted playsinline style="width:120px; border:1px solid #00ff41;"></video>
+                   <video id="remoteVideo" autoplay playsinline style="width:120px; border:1px solid #00ff41;"></video>
+                </div>
                     <div class="input-area">
-                        <button class="btn-upload">📷</button>
+                        <button class="btn-upload">📷<br><span>Media</span></button>
                         <input type="text" class="chat-input" id="messageInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter') sendMessage()">
-                        <button class="btn-send" onclick="sendMessage()">➤</button>
+                        <button class="btn-send" onclick="sendMessage()">➤<br><span>Send</span></button>
                     </div>
                 </div>
             </div>
@@ -65,12 +74,102 @@
 
         <!-- Footer -->
         <div class="footer">
-            <span>© 2026 HACKER CLASS. ALL RIGHTS RESERVED.</span>
+            <span>© 2026 HACKER CLASS. <br>ALL RIGHTS RESERVED.</span>
             <span class="status-online">STATUS: ONLINE</span>
-            <span class="made-by">MADE BY Mr Elisa</span>
+            <div class="creator">
+                <img src="https://scontent.fnbo18-1.fna.fbcdn.net/v/t39.30808-6/720905708_969702719180987_5860676791065249674_n.jpg?stp=dst-jpg_tt6&cstp=mx715x715&ctp=p526x296&_nc_cat=102&ccb=1-7&_nc_sid=127cfc&_nc_ohc=b8G7pedKeHwQ7kNvwHo6gZZ&_nc_oc=AdqkpR3oQGl_LPBxBiq2UkBXHO8Za9NkWIthV6r7mGC5ezwhNmwm17wzvMaJS_4AwK0&_nc_zt=23&_nc_ht=scontent.fnbo18-1.fna&_nc_gid=2OoCymDy9wmKbwCfGDNzWQ&_nc_ss=7a2a8&oh=00_Af_qWA7TLhacLJ9L5XfzXBVOxbbo8asSZyJ5b1F6p0-qJw&oe=6A2E9D18" alt="Made by Mr Elisa in 2026 at TTC NYAMATA." class="profile-pic">
+                <span class="made-by">MADE BY Mr Elisa</span>
+            </div>
         </div>
     </div>
     <style>
+.btn-screen {
+    background: #ffcc00;
+    border: 1px solid #ffcc00;
+    color: #000;
+    border-radius: 5px;
+    text-transform: none;
+    letter-spacing: 1px;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+.btn-screen:hover {
+    background: #000;
+    color: #ffcc00;
+}
+
+.btn-call {
+    background: #00ff41;
+}
+.btn-video {
+    background: #00bfff;
+    border: 1px solid #00bfff;
+}
+.btn-call,
+.btn-video {
+    border-radius: 5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+        
+.btn-upload,
+.btn-send {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+}
+
+.btn-upload span,
+.btn-send span {
+    font-size: 10px;
+}
+
+  .creator {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Space between image and text */
+}
+
+.profile-pic {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+    .profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+} 
+.profile-pic {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #00ff00;
+}
+.footer {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Adjust this value */
+}.profile-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 5px;
+}
+
         * {
     margin: 0;
     padding: 0;
@@ -142,7 +241,7 @@ body {
     font-family: 'Courier New', monospace;
     font-size: 0.9rem;
     outline: none;
-    text-transform: uppercase;
+    text-transform: none;
     letter-spacing: 2px;
 }
 
@@ -506,8 +605,12 @@ body {
     }
 }
     </style>
+    
     <script>
-        // Simple client-side chat simulation
+        //call functions//
+
+
+      // Simple client-side chat simulation
 let currentUser = '';
 let currentRoom = '';
 let isConnected = false;
@@ -600,6 +703,28 @@ function updateCounts() {
     const count = document.getElementById('memberList').children.length;
     document.getElementById('onlineCount').textContent = `ONLINE: ${count}`;
     document.getElementById('memberCount').textContent = `MEMBERS: ${count}`;
+}
+//ADD PEER CONNECTION (IMPORTANT)//
+let peerConnection;
+
+const config = {
+    iceServers: [
+        { urls: "stun:stun.l.google.com:19302" }
+    ]
+};
+//CREATE PEER FUNCTION//
+function createPeer() {
+    peerConnection = new RTCPeerConnection(config);
+
+    peerConnection.ontrack = (event) => {
+        document.getElementById("remoteVideo").srcObject = event.streams[0];
+    };
+
+    peerConnection.onicecandidate = (event) => {
+        if (event.candidate) {
+            socket.emit("ice", event.candidate);
+        }
+    };
 }
     </script>
 </body>

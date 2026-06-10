@@ -1,0 +1,26 @@
+{
+  "dependencies": {
+    "express": "^5.2.1",
+    "mongoose": "^9.7.0",
+    "socket.io": "^4.8.3"
+  },
+  "name": "hacker-s-website",
+  "version": "1.0.0",
+  "description": "This is for helping people to converse in secrety way",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elissajohn/Hacker-s-website.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/elissajohn/Hacker-s-website/issues"
+  },
+  "homepage": "https://github.com/elissajohn/Hacker-s-website#readme"
+}
